@@ -17,12 +17,13 @@ let canvas = {
 
 let sound = true
 
+let game
 
 const foodImg = new Image()
-foodImg.src = "img/food.png"
+foodImg.src = "assets/img/food.png"
 
 // load audio files
-var audio = document.getElementById("gameAudio");
+var audio = document.getElementById("gameAudio")
 
 let dead = "assets/audio/dead.mp3"
 let eat = "assets/audio/eat.mp3"
@@ -32,30 +33,19 @@ let left = "assets/audio/left.mp3"
 let down = "assets/audio/down.mp3"
 
 // create the snake
-
 let snake = []
 
-snake[0] = {
-    x: 9 * box,
-    y: 10 * box,
-}//Inisiasi letak kepala snake
-
 // create the food
-
 let food = {
-    x: Math.floor(Math.random() * 28 + 1) * box,
-    y: Math.floor(Math.random() * 28 + 5) * box,
+    x: 0,
+    y: 0,
 }
 
 // create the score var
-
 let score = 0
 
-//control the snake
 
-let d//untuk menyimpan arah sebelumnya
-
-document.addEventListener("keydown", direction)
+let d //untuk menyimpan arah sebelumnya
 
 function direction(event) {
     let key = event.keyCode
@@ -91,7 +81,7 @@ function collision(head, array) {
 // draw everything to the canvas
 
 function draw() {
-    ctx.drawImage(ground, 0, 0)//draw area permainan
+    ctx.clearRect(0, 0, canvas.x, canvas.y)
 
     for (let i = 0; i < snake.length; i++) {
         ctx.fillStyle = i == 0 ? "green" : "white"//green untuk kepala ular, white utk badan ular
@@ -116,10 +106,11 @@ function draw() {
     //if the snake eats the food
     if (snakeX == food.x && snakeY == food.y) {//jika letak kepala ular = letak makanan
         score++
-        eat.play()
+        audio.src = eat
+        audio.play()
         food = {
-            x: Math.floor(Math.random() * 17 + 1) * box,
-            y: Math.floor(Math.random() * 15 + 4) * box,
+            x: random(0, cvs.width),
+            y: random(0, cvs.height-box),
         }
         // we don't remove the tail
     } else {
@@ -135,20 +126,79 @@ function draw() {
     }
 
     // game over
-
-    if (snakeX < box || snakeX > 28 * box || snakeY < 4 * box || snakeY > 28 * box || collision(newHead, snake)) {
-        clearInterval(game)
-        audio.src = dead
-        audio.play()
+    if (snakeX < 0 || snakeX == cvs.width || snakeY < 0 || snakeY == cvs.height || collision(newHead, snake)) {
+        gameOver()
     }
 
     snake.unshift(newHead)
 
     ctx.fillStyle = "white"
     ctx.font = "45px Changa one"
-    ctx.fillText(score, 2 * box, 1.6 * box)
+    // ctx.fillText(score, 2 * box, 1.6 * box)
+    document.getElementById('score').innerText = score
+    // document.getElementById('lives').innerText = random(0, 100)
 }
 
-// // call draw function every 100 ms
+const clearGame = () => {
+    snake = []
+    d= ""
+    snake[0] = {
+        x: random(0, cvs.width-box),
+        y: random(0, cvs.height-box),
+    }
+    food = {
+        x: random(0, cvs.width-box),
+        y: random(0, cvs.height-box),
+    }
+    score = 0
+    // draw()
+}
 
-let game = setInterval(draw, 100)
+const start = () => {
+    clearGame()
+    //call draw function every 100 ms
+    document.addEventListener("keydown", direction)
+    game = setInterval(draw, 100)
+} 
+
+const pause = () => {
+    clearInterval(game)
+}
+
+const resume = () => {
+    game = setInterval(draw, 100)
+}
+
+const gameOver = () => {
+    audio.src = dead
+    audio.play()
+    document.removeEventListener("keydown", direction)
+    document.getElementById("mid_menu").style.display='none'
+    document.getElementById("play_menu").style.display='block'
+    clearInterval(game)
+    // clearGame()
+}
+
+const restart = () => {
+    gameOver()
+    clearGame()
+    // start()
+}
+
+const toggleSound = () => {
+    if (sound) {
+        sound = false
+        console.log("off")
+        document.getElementById("gameAudio").muted  = true
+        document.getElementById("sound_on").style.display='inline'
+        document.getElementById("sound_off").style.display='none'
+    } else {
+        sound = true
+        console.log("on")
+        document.getElementById("gameAudio").muted  = false
+        document.getElementById("sound_on").style.display='none'
+        document.getElementById("sound_off").style.display='inline'
+    }
+}
+
+clearGame()
