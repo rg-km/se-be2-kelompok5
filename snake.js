@@ -39,10 +39,13 @@ snake[0] = {
 
 // create the food
 
-let food = {
-    x: Math.floor(Math.random() * 28 + 1) * box,
-    y: Math.floor(Math.random() * 28 + 5) * box,
+let Food = function(){
+    this.x= Math.floor(Math.random() * 28 + 1) * box;
+    this.y= Math.floor(Math.random() * 28 + 5) * box;//ada bug
 };
+
+let food1 = new Food();
+let food2= new Food();
 
 // create the score var
 
@@ -94,8 +97,8 @@ function draw() {
         ctx.strokeRect(snake[i].x, snake[i].y, box, box);
     }
 
-    ctx.drawImage(foodImg, food.x, food.y);//draw food
-
+    ctx.drawImage(foodImg, food1.x, food1.y);//draw food
+    ctx.drawImage(foodImg, food2.x, food2.y);
     // old head position
     let snakeX = snake[0].x;
     let snakeY = snake[0].y;
@@ -107,15 +110,18 @@ function draw() {
     if (d == "DOWN") snakeY += box;
 
     //if the snake eats the food
-    if (snakeX == food.x && snakeY == food.y) {//jika letak kepala ular = letak makanan
+    if ((snakeX == food1.x && snakeY == food1.y)) {//jika letak kepala ular = letak makanan
         score++;
         eat.play();
-        food = {
-            x: Math.floor(Math.random() * 17 + 1) * box,
-            y: Math.floor(Math.random() * 15 + 4) * box,
-        };
+        food1.x= Math.floor(Math.random() * 28 + 1) * box;//perbaikan
+        food1.y= Math.floor(Math.random() * 28 + 5) * box;
         // we don't remove the tail
-    } else {
+    }else if ((snakeX==food2.x && snakeY == food2.y)){
+        score++;
+        eat.play();
+        food2.x= Math.floor(Math.random() * 28 + 1) * box;
+        food2.y= Math.floor(Math.random() * 28 + 5) * box;
+    }else {
         // remove the tail
         snake.pop();
     }
