@@ -4,11 +4,6 @@ const ctx = cvs.getContext("2d");
 // create the unit
 const box = 20;
 
-// load images
-
-const ground = new Image();
-ground.src = "img/ground.png";
-
 const foodImg = new Image();
 foodImg.src = "img/food.png";
 
