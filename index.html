@@ -32,12 +32,12 @@
     </div>
     <div id="mid_menu">
       <button id="pause_button"
-      onclick="document.getElementById('pause_button').style.display='none';document.getElementById('resume_button').style.display='inline';"
+      onclick="pause();document.getElementById('pause_button').style.display='none';document.getElementById('resume_button').style.display='inline';"
       >
         Pause
       </button>
       <button id="resume_button" style="display: none;"
-        onclick="document.getElementById('pause_button').style.display='inline';document.getElementById('resume_button').style.display='none';">
+        onclick="resume();document.getElementById('pause_button').style.display='inline';document.getElementById('resume_button').style.display='none';">
         Resume
       </button>
       <button
