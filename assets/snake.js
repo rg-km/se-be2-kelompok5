@@ -22,6 +22,9 @@ let game
 const foodImg = new Image()
 foodImg.src = "assets/img/food.png"
 
+const heartImg = new Image()
+heartImg.src = "assets/img/hati.png"
+
 // load audio files
 var audio = document.getElementById("gameAudio")
 
@@ -41,8 +44,21 @@ let food = {
     y: 0,
 }
 
+//heart
+let heart = {
+    x: -99,
+    y: -99,
+}
+
 // create the score var
 let score = 0
+
+// get 3 lives for the first time
+let lives = 3
+
+// save prime state
+let primeState = false
+
 
 
 let d //untuk menyimpan arah sebelumnya
@@ -78,8 +94,17 @@ function collision(head, array) {
     return false
 }
 
-// draw everything to the canvas
+const isPrime = (num) => {
+    if (primeState) return false
+    if (num <= 1) return false
+    for (let i = 2; i < num; i++) {
+        if (num % i == 0) return false
+    }
+    primeState = true
+    return true
+}
 
+// draw everything to the canvas
 function draw() {
     ctx.clearRect(0, 0, canvas.x, canvas.y)
 
@@ -91,7 +116,7 @@ function draw() {
         ctx.strokeRect(snake[i].x, snake[i].y, box, box)
     }
 
-    ctx.drawImage(foodImg, food.x, food.y)//draw food
+    ctx.drawImage(foodImg, food.x, food.y, box, box)//draw food
 
     // old head position
     let snakeX = snake[0].x
@@ -109,17 +134,34 @@ function draw() {
         audio.src = eat
         audio.play()
         food = {
-            x: random(0, cvs.width),
-            y: random(0, cvs.height-box),
+            x: random(0, canvas.x-(box+15)),
+            y: random(0, canvas.y-(box+15)),
         }
+        primeState = false
         // we don't remove the tail
     } else {
         // remove the tail
         snake.pop()
     }
 
-    // add new Head
+    // spawn heart
+    if (isPrime(score)) {
+        heart.x = random(0, canvas.x-(box+15))
+        heart.y = random(0, canvas.y-(box+15))
+    }
 
+    ctx.drawImage(heartImg, heart.x, heart.y, box, box)//draw food
+    
+    //if the snake eats the heart
+    if (snakeX == heart.x && snakeY == heart.y) {
+        lives++
+        heart.x = -99
+        heart.y = -99
+        audio.src = eat
+        audio.play()
+    }
+
+    // add new Head
     let newHead = {
         x: snakeX,
         y: snakeY,
@@ -136,7 +178,7 @@ function draw() {
     ctx.font = "45px Changa one"
     // ctx.fillText(score, 2 * box, 1.6 * box)
     document.getElementById('score').innerText = score
-    // document.getElementById('lives').innerText = random(0, 100)
+    document.getElementById('lives').innerText = lives
 }
 
 const clearGame = () => {
@@ -147,8 +189,8 @@ const clearGame = () => {
         y: random(0, cvs.height-box),
     }
     food = {
-        x: random(0, cvs.width-box),
-        y: random(0, cvs.height-box),
+        x: random(0, cvs.width-(box+15)),
+        y: random(0, cvs.height-(box+15)),
     }
     score = 0
     // draw()
@@ -156,6 +198,7 @@ const clearGame = () => {
 
 const start = () => {
     clearGame()
+    lives = 3
     //call draw function every 100 ms
     document.addEventListener("keydown", direction)
     game = setInterval(draw, 100)
