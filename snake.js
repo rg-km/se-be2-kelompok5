@@ -35,13 +35,13 @@ let snake = [];
 snake[0] = {
     x: 9 * box,
     y: 10 * box,
-};
+};//Inisiasi letak kepala snake
 
 // create the food
 
 let food = {
-    x: Math.floor(Math.random() * 17 + 1) * box,
-    y: Math.floor(Math.random() * 15 + 3) * box,
+    x: Math.floor(Math.random() * 28 + 1) * box,
+    y: Math.floor(Math.random() * 28 + 5) * box,
 };
 
 // create the score var
@@ -50,14 +50,14 @@ let score = 0;
 
 //control the snake
 
-let d;
+let d;//untuk menyimpan arah sebelumnya
 
 document.addEventListener("keydown", direction);
 
 function direction(event) {
     let key = event.keyCode;
     if (key == 37 && d != "RIGHT") {
-        left.play();
+        left.play();//memainkan suara
         d = "LEFT";
     } else if (key == 38 && d != "DOWN") {
         d = "UP";
@@ -71,7 +71,7 @@ function direction(event) {
     }
 }
 
-// cheack collision function
+// check collision function
 function collision(head, array) {
     for (let i = 0; i < array.length; i++) {
         if (head.x == array[i].x && head.y == array[i].y) {
@@ -84,35 +84,35 @@ function collision(head, array) {
 // draw everything to the canvas
 
 function draw() {
-    ctx.drawImage(ground, 0, 0);
+    ctx.drawImage(ground, 0, 0);//draw area permainan
 
     for (let i = 0; i < snake.length; i++) {
-        ctx.fillStyle = i == 0 ? "green" : "white";
+        ctx.fillStyle = i == 0 ? "green" : "white";//green untuk kepala ular, white utk badan ular
         ctx.fillRect(snake[i].x, snake[i].y, box, box);
 
-        ctx.strokeStyle = "red";
+        ctx.strokeStyle = "red";//utk stroke
         ctx.strokeRect(snake[i].x, snake[i].y, box, box);
     }
 
-    ctx.drawImage(foodImg, food.x, food.y);
+    ctx.drawImage(foodImg, food.x, food.y);//draw food
 
     // old head position
     let snakeX = snake[0].x;
     let snakeY = snake[0].y;
 
     // which direction
-    if (d == "LEFT") snakeX -= box;
+    if (d == "LEFT") snakeX -= box;//untuk gerak ular ke kiri dsb
     if (d == "UP") snakeY -= box;
     if (d == "RIGHT") snakeX += box;
     if (d == "DOWN") snakeY += box;
 
-    // if the snake eats the food
-    if (snakeX == food.x && snakeY == food.y) {
+    //if the snake eats the food
+    if (snakeX == food.x && snakeY == food.y) {//jika letak kepala ular = letak makanan
         score++;
         eat.play();
         food = {
             x: Math.floor(Math.random() * 17 + 1) * box,
-            y: Math.floor(Math.random() * 15 + 3) * box,
+            y: Math.floor(Math.random() * 15 + 4) * box,
         };
         // we don't remove the tail
     } else {
@@ -129,7 +129,7 @@ function draw() {
 
     // game over
 
-    if (snakeX < box || snakeX > 17 * box || snakeY < 3 * box || snakeY > 17 * box || collision(newHead, snake)) {
+    if (snakeX < box || snakeX > 28 * box || snakeY < 4 * box || snakeY > 28 * box || collision(newHead, snake)) {
         clearInterval(game);
         dead.play();
     }
@@ -141,6 +141,6 @@ function draw() {
     ctx.fillText(score, 2 * box, 1.6 * box);
 }
 
-// call draw function every 100 ms
+// // call draw function every 100 ms
 
 let game = setInterval(draw, 100);
