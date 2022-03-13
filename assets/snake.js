@@ -225,7 +225,9 @@ function draw() {
         }
     }
 
-    ctx.drawImage(foodImg, food.x, food.y, box, box)//draw food
+    ctx.drawImage(foodImg, food1.x, food1.y, box, box)//draw food
+    ctx.drawImage(foodImg, food2.x, food2.y, box, box)//draw food
+
     ctx.drawImage(duriImg, duri.x,duri.y,box,box)//draw duri
 
     // old head position
@@ -356,6 +358,7 @@ const gameOver = () => {
     document.getElementById("mid_menu").style.display='none'
     document.getElementById("play_menu").style.display='block'
     clearInterval(game)
+    alert("Game Over")
     // clearGame()
 }
 
