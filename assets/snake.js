@@ -28,6 +28,9 @@ heartImg.src = "assets/img/hati.png"
 const snakeGraphic = new Image()
 snakeGraphic.src = "assets/img/snake-graphics.png"
 
+const duriImg = new Image()
+duriImg.src = "assets/img/duri.png"
+
 // load audio files
 var audio = document.getElementById("gameAudio")
 
@@ -50,6 +53,10 @@ let snake = []
 let Food = function(){
     this.x = 0;
     this.y =0;
+}
+let duri = {
+    x:0,
+    y:0,
 }
 
 let food1 = new Food();
@@ -218,8 +225,13 @@ function draw() {
         }
     }
 
+<<<<<<< Updated upstream
     ctx.drawImage(foodImg, food1.x, food1.y, box, box)//draw food
     ctx.drawImage(foodImg, food2.x, food2.y, box,box)
+=======
+    ctx.drawImage(foodImg, food.x, food.y, box, box)//draw food
+    ctx.drawImage(duriImg, duri.x,duri.y,box,box)//draw duri
+>>>>>>> Stashed changes
 
     // old head position
     let snakeX = snake[0].x
@@ -256,6 +268,14 @@ function draw() {
      else {
         // remove the tail
         snake.pop()
+    }
+
+    if (snakeX == duri.x && snakeY == duri.y ) {
+        lives--
+        if(lives < 0){
+            gameOver()
+        }
+
     }
 
     // spawn heart
@@ -309,6 +329,10 @@ const clearGame = () => {
     food2 = {
         x: random(0, cvs.width-(box+15)),
         y: random(0, cvs.height-(box+15)),
+    }
+    duri ={
+        x: random(0, cvs.width-(box+5)),
+        y: random(0, cvs.height-(box+5)),
     }
     score = 0
     // draw()
