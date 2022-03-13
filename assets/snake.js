@@ -225,13 +225,8 @@ function draw() {
         }
     }
 
-<<<<<<< Updated upstream
-    ctx.drawImage(foodImg, food1.x, food1.y, box, box)//draw food
-    ctx.drawImage(foodImg, food2.x, food2.y, box,box)
-=======
     ctx.drawImage(foodImg, food.x, food.y, box, box)//draw food
     ctx.drawImage(duriImg, duri.x,duri.y,box,box)//draw duri
->>>>>>> Stashed changes
 
     // old head position
     let snakeX = snake[0].x
