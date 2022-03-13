@@ -146,74 +146,35 @@ function draw() {
     ctx.clearRect(0, 0, canvas.x, canvas.y)
 
     for (let i = 0; i < snake.length; i++) {
-
         if(snake[i+1] && snake[i-1]){
             // ketika objek memiliki 2 neighbor
-            if((
-                snake[i+1].y == snake[i].y && 
-                snake[i+1].x > snake[i].x &&
-                snake[i-1].x == snake[i].x &&
-                snake[i-1].y > snake[i].y) ||
-                (
-                snake[i+1].x == snake[i].x && 
-                snake[i+1].y > snake[i].y &&
-                snake[i-1].y == snake[i].y &&
-                snake[i-1].x > snake[i].x)
-                ){
-
+            var sameX = o => snake[o].x == snake[i].x
+            var sameY = o => snake[o].y == snake[i].y
+            var biggerX = o => snake[o].x > snake[i].x
+            var biggerY = o => snake[o].y > snake[i].y
+            var smallerX = o => snake[o].x < snake[i].x
+            var smallerY = o => snake[o].y < snake[i].y
+            
+            if((sameY(i+1) && biggerX(i+1) && sameX(i-1) && biggerY(i-1)) || (sameX(i+1) && biggerY(i+1) && sameY(i-1) && biggerX(i-1))){
                 // ketika ular berubah arah dari kiri ke bawah dan dari atas ke kanan
                 ctx.drawImage(snakeGraphic, ...imagePos.topLeft, 64, 64, snake[i].x, snake[i].y, box, box);
                 continue;
             }
-            if((
-                snake[i+1].y == snake[i].y && 
-                snake[i+1].x > snake[i].x &&
-                snake[i-1].x == snake[i].x &&
-                snake[i-1].y < snake[i].y) ||
-                (
-                snake[i+1].x == snake[i].x &&
-                snake[i+1].y < snake[i].y &&
-                snake[i-1].y == snake[i].y &&
-                snake[i-1].x > snake[i].x)
-                ){
-
+            if((sameY(i+1) && biggerX(i+1) && sameX(i-1) && smallerY(i-1)) || (sameX(i+1) && smallerY(i+1) && sameY(i-1) && biggerX(i-1))){
                 // ketika ular berubah arah dari kiri ke atas dan dari bawah ke kanan
                 ctx.drawImage(snakeGraphic, ...imagePos.downLeft, 64, 64, snake[i].x, snake[i].y, box, box);
                 continue;
             }
-            if((
-                snake[i+1].y > snake[i].y && 
-                snake[i+1].x == snake[i].x &&
-                snake[i-1].x < snake[i].x &&
-                snake[i-1].y == snake[i].y) ||
-                (
-                snake[i+1].x < snake[i].x &&
-                snake[i+1].y == snake[i].y &&
-                snake[i-1].y > snake[i].y &&
-                snake[i-1].x == snake[i].x)
-                ){
-                
+            if((biggerY(i+1) && sameX(i+1) && smallerX(i-1) && sameY(i-1)) || (smallerX(i+1) && sameY(i+1) && biggerY(i-1) && sameX(i-1))){
                 // ketika ular berubah arah dari atas ke kiri dan dari kanan ke bawah
                 ctx.drawImage(snakeGraphic, ...imagePos.topRight, 64, 64, snake[i].x, snake[i].y, box, box);
                 continue;
             }
-            if((
-                snake[i+1].y < snake[i].y && 
-                snake[i+1].x == snake[i].x &&
-                snake[i-1].x < snake[i].x &&
-                snake[i-1].y == snake[i].y) ||
-                (
-                snake[i+1].x < snake[i].x &&
-                snake[i+1].y == snake[i].y &&
-                snake[i-1].y < snake[i].y &&
-                snake[i-1].x == snake[i].x)
-                ){
-
+            if((smallerY(i+1) && sameX(i+1) && smallerX(i-1) && sameY(i-1)) || (smallerX(i+1) && sameY(i+1) && smallerY(i-1) && sameX(i-1))){
                 // ketika ular berubah arah dari bawah ke kiri dan dari kanan ke atas
                 ctx.drawImage(snakeGraphic, ...imagePos.downRight, 64, 64, snake[i].x, snake[i].y, box, box);
                 continue;
             }
-            
             if(snake[i+1].x == snake[i].x){
                 // badan vertical
                 ctx.drawImage(snakeGraphic, ...imagePos.vertical, 64, 64, snake[i].x, snake[i].y, box, box);
@@ -221,16 +182,6 @@ function draw() {
             if(snake[i+1].y == snake[i].y){
                 // badan horizontal
                 ctx.drawImage(snakeGraphic, ...imagePos.horizontal, 64, 64, snake[i].x, snake[i].y, box, box);
-            }
-
-        }else if(snake[i+1]){
-            // ketika objek memiliki 1 neighbor dibelakang (untuk kepala)
-            if(stateD != d){
-                // untuk menunda perubahan arah kepala satu frame
-                drawHead(stateD)
-                stateD = d
-            }else{
-                drawHead(d)
             }
         }else if(snake[i-1]){
             // ketika objek memiliki 1 neighbor didepan (untuk ekor)
