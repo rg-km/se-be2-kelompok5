@@ -25,6 +25,9 @@ foodImg.src = "assets/img/food.png"
 const heartImg = new Image()
 heartImg.src = "assets/img/hati.png"
 
+const snakeGraphic = new Image()
+snakeGraphic.src = "assets/img/snake-graphics.png"
+
 // load audio files
 var audio = document.getElementById("gameAudio")
 
@@ -104,16 +107,156 @@ const isPrime = (num) => {
     return true
 }
 
+const imagePos = {
+    vertical : [128, 64],
+    horizontal : [64, 0],
+    topLeft : [0, 0],
+    downLeft : [0, 64],
+    topRight : [128, 0],
+    downRight : [128, 128],
+    faceTop : [192, 0],
+    faceLeft : [192, 64],
+    faceRight : [256, 0],
+    faceBottom : [256, 64],
+    tailBottom : [192, 128],
+    tailRight : [192, 192],
+    tailLeft : [256, 128],
+    tailTop : [256, 192],
+}
+
+
+// menggambar kepala ular
+const drawHead = (direct) => {
+    switch(direct){
+        case "LEFT":
+            ctx.drawImage(snakeGraphic, ...imagePos.faceLeft, 64, 64, snake[0].x, snake[0].y, box, box);break;
+        case "UP":
+            ctx.drawImage(snakeGraphic, ...imagePos.faceTop, 64, 64, snake[0].x, snake[0].y, box, box);break;
+        case "RIGHT":
+            ctx.drawImage(snakeGraphic, ...imagePos.faceRight, 64, 64, snake[0].x, snake[0].y, box, box);break;
+        case "DOWN":
+            ctx.drawImage(snakeGraphic, ...imagePos.faceBottom, 64, 64, snake[0].x, snake[0].y, box, box);break;
+    }
+}
+
+let stateD = "" // untuk menyimpan arah dari frame sebelumnya
+
 // draw everything to the canvas
 function draw() {
     ctx.clearRect(0, 0, canvas.x, canvas.y)
 
     for (let i = 0; i < snake.length; i++) {
-        ctx.fillStyle = i == 0 ? "green" : "white"//green untuk kepala ular, white utk badan ular
-        ctx.fillRect(snake[i].x, snake[i].y, box, box)
 
-        ctx.strokeStyle = "red"//utk stroke
-        ctx.strokeRect(snake[i].x, snake[i].y, box, box)
+        if(snake[i+1] && snake[i-1]){
+            // ketika objek memiliki 2 neighbor
+            if((
+                snake[i+1].y == snake[i].y && 
+                snake[i+1].x > snake[i].x &&
+                snake[i-1].x == snake[i].x &&
+                snake[i-1].y > snake[i].y) ||
+                (
+                snake[i+1].x == snake[i].x && 
+                snake[i+1].y > snake[i].y &&
+                snake[i-1].y == snake[i].y &&
+                snake[i-1].x > snake[i].x)
+                ){
+
+                // ketika ular berubah arah dari kiri ke bawah dan dari atas ke kanan
+                ctx.drawImage(snakeGraphic, ...imagePos.topLeft, 64, 64, snake[i].x, snake[i].y, box, box);
+                continue;
+            }
+            if((
+                snake[i+1].y == snake[i].y && 
+                snake[i+1].x > snake[i].x &&
+                snake[i-1].x == snake[i].x &&
+                snake[i-1].y < snake[i].y) ||
+                (
+                snake[i+1].x == snake[i].x &&
+                snake[i+1].y < snake[i].y &&
+                snake[i-1].y == snake[i].y &&
+                snake[i-1].x > snake[i].x)
+                ){
+
+                // ketika ular berubah arah dari kiri ke atas dan dari bawah ke kanan
+                ctx.drawImage(snakeGraphic, ...imagePos.downLeft, 64, 64, snake[i].x, snake[i].y, box, box);
+                continue;
+            }
+            if((
+                snake[i+1].y > snake[i].y && 
+                snake[i+1].x == snake[i].x &&
+                snake[i-1].x < snake[i].x &&
+                snake[i-1].y == snake[i].y) ||
+                (
+                snake[i+1].x < snake[i].x &&
+                snake[i+1].y == snake[i].y &&
+                snake[i-1].y > snake[i].y &&
+                snake[i-1].x == snake[i].x)
+                ){
+                
+                // ketika ular berubah arah dari atas ke kiri dan dari kanan ke bawah
+                ctx.drawImage(snakeGraphic, ...imagePos.topRight, 64, 64, snake[i].x, snake[i].y, box, box);
+                continue;
+            }
+            if((
+                snake[i+1].y < snake[i].y && 
+                snake[i+1].x == snake[i].x &&
+                snake[i-1].x < snake[i].x &&
+                snake[i-1].y == snake[i].y) ||
+                (
+                snake[i+1].x < snake[i].x &&
+                snake[i+1].y == snake[i].y &&
+                snake[i-1].y < snake[i].y &&
+                snake[i-1].x == snake[i].x)
+                ){
+
+                // ketika ular berubah arah dari bawah ke kiri dan dari kanan ke atas
+                ctx.drawImage(snakeGraphic, ...imagePos.downRight, 64, 64, snake[i].x, snake[i].y, box, box);
+                continue;
+            }
+            
+            if(snake[i+1].x == snake[i].x){
+                // badan vertical
+                ctx.drawImage(snakeGraphic, ...imagePos.vertical, 64, 64, snake[i].x, snake[i].y, box, box);
+            }
+            if(snake[i+1].y == snake[i].y){
+                // badan horizontal
+                ctx.drawImage(snakeGraphic, ...imagePos.horizontal, 64, 64, snake[i].x, snake[i].y, box, box);
+            }
+
+        }else if(snake[i+1]){
+            // ketika objek memiliki 1 neighbor dibelakang (untuk kepala)
+            if(stateD != d){
+                // untuk menunda perubahan arah kepala satu frame
+                drawHead(stateD)
+                stateD = d
+            }else{
+                drawHead(d)
+            }
+        }else if(snake[i-1]){
+            // ketika objek memiliki 1 neighbor didepan (untuk ekor)
+            if(snake[i-1].x == snake[i].x && snake[i-1].y < snake[i].y){
+                // ekor ketika ular arah ke atas
+                ctx.drawImage(snakeGraphic, ...imagePos.tailBottom, 64, 64, snake[i].x, snake[i].y, box, box);
+            }else if(snake[i-1].x == snake[i].x && snake[i-1].y > snake[i].y){
+                // ekor ketika ular arah ke bawah
+                ctx.drawImage(snakeGraphic, ...imagePos.tailTop, 64, 64, snake[i].x, snake[i].y, box, box);
+            }else if(snake[i-1].y == snake[i].y && snake[i-1].x < snake[i].x){
+                // ekor ketika ular arah ke kiri
+                ctx.drawImage(snakeGraphic, ...imagePos.tailRight, 64, 64, snake[i].x, snake[i].y, box, box);
+            }else if(snake[i-1].y == snake[i].y && snake[i-1].x > snake[i].x){
+                // ekor ketika ular arah ke kanan
+                ctx.drawImage(snakeGraphic, ...imagePos.tailLeft, 64, 64, snake[i].x, snake[i].y, box, box);
+            }
+        }else{
+            // ketika objek memiliki 1 neighbor dibelakang (untuk kepala)
+            if(stateD != d){
+                // untuk menunda perubahan arah kepala satu frame
+                drawHead(stateD)
+                stateD = d
+            }else{
+                drawHead(d)
+            }
+        }
     }
 
     ctx.drawImage(foodImg, food.x, food.y, box, box)//draw food
@@ -175,7 +318,7 @@ function draw() {
     snake.unshift(newHead)
 
     ctx.fillStyle = "white"
-    ctx.font = "45px Changa one"
+    ctx.font = "45px Change one"
     // ctx.fillText(score, 2 * box, 1.6 * box)
     document.getElementById('score').innerText = score
     document.getElementById('lives').innerText = lives
@@ -201,7 +344,7 @@ const start = () => {
     lives = 3
     //call draw function every 100 ms
     document.addEventListener("keydown", direction)
-    game = setInterval(draw, 100)
+    game = setInterval(draw, 200)
 } 
 
 const pause = () => {
