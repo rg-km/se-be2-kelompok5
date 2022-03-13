@@ -297,21 +297,18 @@ function draw() {
 
     if (heartTimerCount.now < heartTimerCount.end) {
         ctx.drawImage(heartImg, heart.x, heart.y, box, box)//draw heart
-    } else {
-        heart.x = -99
-        heart.y = -99
+        //if the snake eats the heart
+        if (snakeX == heart.x && snakeY == heart.y) {
+            lives++
+            heart.x = -99
+            heart.y = -99
+            audio.src = eat
+            audio.play()
+            heartTimerCount.now = heartTimerCount.end
+        }
     }
 
     heartTimerCount.now++
-    
-    //if the snake eats the heart
-    if (snakeX == heart.x && snakeY == heart.y) {
-        lives++
-        heart.x = -99
-        heart.y = -99
-        audio.src = eat
-        audio.play()
-    }
 
     // add new Head
     let newHead = {
