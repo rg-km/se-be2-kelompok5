@@ -42,10 +42,18 @@ let down = "assets/audio/down.mp3"
 let snake = []
 
 // create the food
-let food = {
-    x: 0,
-    y: 0,
+// let food = {
+//     x: 0,
+//     y: 0,
+// }
+
+let Food = function(){
+    this.x = 0;
+    this.y =0;
 }
+
+let food1 = new Food();
+let food2 = new Food();
 
 //heart
 let heart = {
@@ -210,7 +218,8 @@ function draw() {
         }
     }
 
-    ctx.drawImage(foodImg, food.x, food.y, box, box)//draw food
+    ctx.drawImage(foodImg, food1.x, food1.y, box, box)//draw food
+    ctx.drawImage(foodImg, food2.x, food2.y, box,box)
 
     // old head position
     let snakeX = snake[0].x
@@ -223,17 +232,28 @@ function draw() {
     if (d == "DOWN") snakeY += box
 
     //if the snake eats the food
-    if (snakeX == food.x && snakeY == food.y) {//jika letak kepala ular = letak makanan
+    if (snakeX == food1.x && snakeY == food1.y) {//jika letak kepala ular = letak makanan
         score++
         audio.src = eat
         audio.play()
-        food = {
+        food1 = {
             x: random(0, canvas.x-(box+15)),
             y: random(0, canvas.y-(box+15)),
         }
         primeState = false
         // we don't remove the tail
-    } else {
+    }else if (snakeX == food2.x && snakeY == food2.y) {//jika letak kepala ular = letak makanan
+        score++
+        audio.src = eat
+        audio.play()
+        food2 = {
+            x: random(0, canvas.x-(box+15)),
+            y: random(0, canvas.y-(box+15)),
+        }
+        primeState = false
+        // we don't remove the tail
+    }
+     else {
         // remove the tail
         snake.pop()
     }
@@ -282,7 +302,11 @@ const clearGame = () => {
         x: random(0, cvs.width-box),
         y: random(0, cvs.height-box),
     }
-    food = {
+    food1 = {
+        x: random(0, cvs.width-(box+15)),
+        y: random(0, cvs.height-(box+15)),
+    }
+    food2 = {
         x: random(0, cvs.width-(box+15)),
         y: random(0, cvs.height-(box+15)),
     }
