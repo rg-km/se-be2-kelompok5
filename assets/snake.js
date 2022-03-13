@@ -259,23 +259,23 @@ function draw() {
         audio.src = eat
         audio.play()
         food1 = {
-            x: random(0, canvas.x-(box+15)),
-            y: random(0, canvas.y-(box+15)),
+            x: random(box, canvas.x-(box+15)),
+            y: random(box, canvas.y-(box+15)),
         }
         primeState = false
         // we don't remove the tail
-    }else if (snakeX == food2.x && snakeY == food2.y) {//jika letak kepala ular = letak makanan
+    } else if (snakeX == food2.x && snakeY == food2.y) {//jika letak kepala ular = letak makanan
         score++
         audio.src = eat
         audio.play()
         food2 = {
-            x: random(0, canvas.x-(box+15)),
-            y: random(0, canvas.y-(box+15)),
+            x: random(box, canvas.x-(box+15)),
+            y: random(box, canvas.y-(box+15)),
         }
         primeState = false
         // we don't remove the tail
     }
-     else {
+    else {
         // remove the tail
         snake.pop()
     }
@@ -285,13 +285,12 @@ function draw() {
         if(lives < 0){
             gameOver()
         }
-
     }
 
     // spawn heart
     if (isPrime(score)) {
-        heart.x = random(0, canvas.x-(box+15))
-        heart.y = random(0, canvas.y-(box+15))
+        heart.x = random(box, canvas.x-(box+15))
+        heart.y = random(box, canvas.y-(box+15))
         heartTimerCount.now = 0
     }
 
@@ -300,8 +299,6 @@ function draw() {
         //if the snake eats the heart
         if (snakeX == heart.x && snakeY == heart.y) {
             lives++
-            heart.x = -99
-            heart.y = -99
             audio.src = eat
             audio.play()
             heartTimerCount.now = heartTimerCount.end
@@ -317,15 +314,12 @@ function draw() {
     }
 
     // game over
-    if (snakeX < 0 || snakeX == cvs.width || snakeY < 0 || snakeY == cvs.height || collision(newHead, snake)) {
+    if (snakeX < 0 || snakeX == canvas.x || snakeY < 0 || snakeY == canvas.y || collision(newHead, snake)) {
         gameOver()
     }
 
     snake.unshift(newHead)
 
-    ctx.fillStyle = "white"
-    ctx.font = "45px Change one"
-    // ctx.fillText(score, 2 * box, 1.6 * box)
     document.getElementById('score').innerText = score
     document.getElementById('lives').innerText = lives
 	document.getElementById('speed').innerText = speed												  
@@ -335,20 +329,20 @@ const clearGame = () => {
     snake = []
     d= ""
     snake[0] = {
-        x: random(0, cvs.width-box),
-        y: random(0, cvs.height-box),
+        x: random(box, canvas.x-box),
+        y: random(box, canvas.y-box),
     }
     food1 = {
-        x: random(0, cvs.width-(box+15)),
-        y: random(0, cvs.height-(box+15)),
+        x: random(box, canvas.x-(box+15)),
+        y: random(box, canvas.y-(box+15)),
     }
     food2 = {
-        x: random(0, cvs.width-(box+15)),
-        y: random(0, cvs.height-(box+15)),
+        x: random(box, canvas.x-(box+15)),
+        y: random(box, canvas.y-(box+15)),
     }
     duri ={
-        x: random(0, cvs.width-(box+5)),
-        y: random(0, cvs.height-(box+5)),
+        x: random(box, canvas.x-(box+5)),
+        y: random(box, canvas.y-(box+5)),
     }
     score = 0
     // draw()
