@@ -28,7 +28,7 @@ let score = 0
 // get 3 lives for the first time
 let lives = 3
 
-let level = 1
+let level = 5
 
 let heartTimerCount = {
     now: 0,
@@ -207,6 +207,10 @@ let stateD = "" // untuk menyimpan arah dari frame sebelumnya
 // draw everything to the canvas
 function draw() {
     ctx.clearRect(0, 0, canvas.x, canvas.y)
+    
+    obs1.x=[]
+    obs1.y=[]
+    obs1.isMade=false
 
     for (let i = 0; i < snake.length; i++) {
         if(snake[i+1] && snake[i-1]){
@@ -272,45 +276,34 @@ function draw() {
             }
         }
 
-        switch (level) {
-            case 1:
-                drawObstacles(5,4,13,4,obs1.x,obs1.y,obs1.isMade,obs1);
-                drawObstacles(5,15,13,15,obs2.x,obs2.y,obs2.isMade,obs2);
-                drawObstacles(4,7,4,10,obs3.x,obs3.y,obs3.isMade,obs3);
-                drawObstacles(14,9,14,11,obs4.x,obs4.y,obs4.isMade,obs4);
-            break;
-            case 2:
-                drawObstacles(5,4,13,4,obs1.x,obs1.y,obs1.isMade,obs1);
-                drawObstacles(15,15,13,15,obs2.x,obs2.y,obs2.isMade,obs2);
-                drawObstacles(8,7,4,10,obs3.x,obs3.y,obs3.isMade,obs3);
-                drawObstacles(10,9,14,11,obs4.x,obs4.y,obs4.isMade,obs4);
-            break;
-            case 3:
-                drawObstacles(5,4,13,4,obs1.x,obs1.y,obs1.isMade,obs1);
-                drawObstacles(5,15,13,15,obs2.x,obs2.y,obs2.isMade,obs2);
-                drawObstacles(9,7,4,10,obs3.x,obs3.y,obs3.isMade,obs3);
-                drawObstacles(14,9,14,11,obs4.x,obs4.y,obs4.isMade,obs4);
-            break;
-            case 4:
-                drawObstacles(5,4,13,14,obs1.x,obs1.y,obs1.isMade,obs1);
-                drawObstacles(5,15,13,15,obs2.x,obs2.y,obs2.isMade,obs2);
-                drawObstacles(4,7,4,10,obs3.x,obs3.y,obs3.isMade,obs3);
-                drawObstacles(14,9,14,11,obs4.x,obs4.y,obs4.isMade,obs4);
-            break;
-            case 5:
-                drawObstacles(5,4,13,12,obs1.x,obs1.y,obs1.isMade,obs1);
-                drawObstacles(5,15,7,15,obs2.x,obs2.y,obs2.isMade,obs2);
-                drawObstacles(4,7,4,11,obs3.x,obs3.y,obs3.isMade,obs3);
-                drawObstacles(14,9,14,11,obs4.x,obs4.y,obs4.isMade,obs4);
-            break;
-        
-            default:
-                break;
-        }
+
 
     }
 
-   
+    switch (level) {
+        case 1: break;
+        case 2:
+            drawObstacles(5,4,13,4,obs1.x,obs1.y,obs1.isMade,obs1);
+        break;
+        case 3:
+            drawObstacles(5,4,13,4,obs1.x,obs1.y,obs1.isMade,obs1);
+            drawObstacles(5,15,13,15,obs2.x,obs2.y,obs2.isMade,obs2);
+        break;
+        case 4:
+            drawObstacles(5,4,13,4,obs1.x,obs1.y,obs1.isMade,obs1);
+            drawObstacles(5,15,13,15,obs2.x,obs2.y,obs2.isMade,obs2);
+            drawObstacles(4,7,4,10,obs3.x,obs3.y,obs3.isMade,obs3);
+        break;
+        case 5:
+            drawObstacles(5,4,13,4,obs1.x,obs1.y,obs1.isMade,obs1);
+            drawObstacles(5,15,13,15,obs2.x,obs2.y,obs2.isMade,obs2);
+            drawObstacles(4,7,4,10,obs3.x,obs3.y,obs3.isMade,obs3);
+            drawObstacles(14,9,14,11,obs4.x,obs4.y,obs4.isMade,obs4);
+        break;
+    
+        default:
+            break;
+    }
 
     ctx.drawImage(foodImg, food1.x, food1.y, box, box)//draw food
     ctx.drawImage(foodImg, food2.x, food2.y, box, box)//draw food
@@ -379,18 +372,18 @@ function draw() {
         heart.y = random(box, canvas.y-(box+15))
         heartTimerCount.now = 0
     }
-    //level
-    if (score <= 5) {
-        level = 1
-    } else if (score <= 10) {
-        level = 2
-    } else if (score <= 15) {
-        level = 3
-    }else if (score <= 20) {
-        level = 4
-    } else if (score <= 25) {
-        level = 5
-    }
+    // //level
+    // if (score <= 5) {
+    //     level = 1
+    // } else if (score <= 10) {
+    //     level = 2
+    // } else if (score <= 15) {
+    //     level = 3
+    // }else if (score <= 20) {
+    //     level = 4
+    // } else if (score <= 25) {
+    //     level = 5
+    // }
 
     if (heartTimerCount.now < heartTimerCount.end) {
         ctx.drawImage(heartImg, heart.x, heart.y, box, box)//draw heart
@@ -420,7 +413,15 @@ function draw() {
 
     document.getElementById('score').innerText = score
     document.getElementById('lives').innerText = lives
-	document.getElementById('speed').innerText = speed												  
+	document.getElementById('speed').innerText = speed
+    document.getElementById('level').innerText = level
+
+
+    console.log(obs1);
+    // console.log(obs2);
+    // console.log(obs3);
+
+
 }
 
 const clearGame = () => {
@@ -443,6 +444,10 @@ const clearGame = () => {
         y: random(box, canvas.y-(box+5)),
     }
     score = 0
+    // console.log[obs1.x]
+    // console.log[obs1.y]
+
+
     // draw()
     
 }
@@ -451,6 +456,7 @@ const start = () => {
     clearGame()
     
     lives = 3
+
     //call draw function every 100 ms
     document.addEventListener("keydown", direction)
 	heartTimerCount.now = 0
