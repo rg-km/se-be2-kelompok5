@@ -28,7 +28,7 @@ let score = 0
 // get 3 lives for the first time
 let lives = 3
 
-let level = 0
+let level = 1
 
 let heartTimerCount = {
     now: 0,
@@ -93,6 +93,8 @@ let heart = {
     x: -99,
     y: -99,
 }
+
+
 
 let d //untuk menyimpan arah sebelumnya
 
@@ -199,6 +201,7 @@ function drawObstacles(x1,y1,x2,y2,objectX, objectY,made,obs){
     obs.isMade = true;
 }
 
+
 let stateD = "" // untuk menyimpan arah dari frame sebelumnya
 
 // draw everything to the canvas
@@ -268,17 +271,63 @@ function draw() {
                 drawHead(d)
             }
         }
+
+        switch (level) {
+            case 1:
+                drawObstacles(5,4,13,4,obs1.x,obs1.y,obs1.isMade,obs1);
+                drawObstacles(5,15,13,15,obs2.x,obs2.y,obs2.isMade,obs2);
+                drawObstacles(4,7,4,10,obs3.x,obs3.y,obs3.isMade,obs3);
+                drawObstacles(14,9,14,11,obs4.x,obs4.y,obs4.isMade,obs4);
+            break;
+            case 2:
+                drawObstacles(5,4,13,4,obs1.x,obs1.y,obs1.isMade,obs1);
+                drawObstacles(15,15,13,15,obs2.x,obs2.y,obs2.isMade,obs2);
+                drawObstacles(8,7,4,10,obs3.x,obs3.y,obs3.isMade,obs3);
+                drawObstacles(10,9,14,11,obs4.x,obs4.y,obs4.isMade,obs4);
+            break;
+            case 3:
+                drawObstacles(5,4,13,4,obs1.x,obs1.y,obs1.isMade,obs1);
+                drawObstacles(5,15,13,15,obs2.x,obs2.y,obs2.isMade,obs2);
+                drawObstacles(9,7,4,10,obs3.x,obs3.y,obs3.isMade,obs3);
+                drawObstacles(14,9,14,11,obs4.x,obs4.y,obs4.isMade,obs4);
+            break;
+            case 4:
+                drawObstacles(5,4,13,14,obs1.x,obs1.y,obs1.isMade,obs1);
+                drawObstacles(5,15,13,15,obs2.x,obs2.y,obs2.isMade,obs2);
+                drawObstacles(4,7,4,10,obs3.x,obs3.y,obs3.isMade,obs3);
+                drawObstacles(14,9,14,11,obs4.x,obs4.y,obs4.isMade,obs4);
+            break;
+            case 5:
+                drawObstacles(5,4,13,12,obs1.x,obs1.y,obs1.isMade,obs1);
+                drawObstacles(5,15,7,15,obs2.x,obs2.y,obs2.isMade,obs2);
+                drawObstacles(4,7,4,11,obs3.x,obs3.y,obs3.isMade,obs3);
+                drawObstacles(14,9,14,11,obs4.x,obs4.y,obs4.isMade,obs4);
+            break;
+        
+            default:
+                break;
+        }
+
     }
+
+   
 
     ctx.drawImage(foodImg, food1.x, food1.y, box, box)//draw food
     ctx.drawImage(foodImg, food2.x, food2.y, box, box)//draw food
 
     ctx.drawImage(duriImg, duri.x,duri.y,box,box)//draw duri
 
-    drawObstacles(5,4,13,4,obs1.x,obs1.y,obs1.isMade,obs1);
+    /* drawObstacles(5,4,13,4,obs1.x,obs1.y,obs1.isMade,obs1);
     drawObstacles(5,15,13,15,obs2.x,obs2.y,obs2.isMade,obs2);
     drawObstacles(4,7,4,10,obs3.x,obs3.y,obs3.isMade,obs3);
-    drawObstacles(14,9,14,11,obs4.x,obs4.y,obs4.isMade,obs4);
+    drawObstacles(14,9,14,11,obs4.x,obs4.y,obs4.isMade,obs4); */
+
+    const obsLvl = () => {
+        drawObstacles(5,4,13,4,obs1.x,obs1.y,obs1.isMade,obs1);
+        drawObstacles(5,15,13,15,obs2.x,obs2.y,obs2.isMade,obs2);
+        drawObstacles(4,7,4,10,obs3.x,obs3.y,obs3.isMade,obs3);
+        drawObstacles(14,9,14,11,obs4.x,obs4.y,obs4.isMade,obs4);
+    };
 
     // old head position
     let snakeX = snake[0].x
@@ -329,6 +378,18 @@ function draw() {
         heart.x = random(box, canvas.x-(box+15))
         heart.y = random(box, canvas.y-(box+15))
         heartTimerCount.now = 0
+    }
+    //level
+    if (score <= 5) {
+        level = 1
+    } else if (score <= 10) {
+        level = 2
+    } else if (score <= 15) {
+        level = 3
+    }else if (score <= 20) {
+        level = 4
+    } else if (score <= 25) {
+        level = 5
     }
 
     if (heartTimerCount.now < heartTimerCount.end) {
@@ -383,16 +444,19 @@ const clearGame = () => {
     }
     score = 0
     // draw()
+    
 }
 
 const start = () => {
     clearGame()
+    
     lives = 3
     //call draw function every 100 ms
     document.addEventListener("keydown", direction)
 	heartTimerCount.now = 0
     heartTimerCount.end = 4000 / speed
     game = setInterval(draw, speed)
+    
 } 
 
 const pause = () => {
