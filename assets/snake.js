@@ -66,12 +66,6 @@ let crash = "assets/audio/crash.wav"
 // create the snake
 let snake = []
 
-// create the food
-// let food = {
-//     x: 0,
-//     y: 0,
-// }
-
 let Food = function(){
     this.x = 0
     this.y =0
@@ -80,6 +74,16 @@ let duri = {
     x:0,
     y:0,
 }
+let Obstacles = function( ){
+    this.x=[ ];
+    this.y=[ ];
+    this.isMade = false;
+}
+
+let obs1 = new Obstacles();//initialize obstacles
+let obs2 = new Obstacles();
+let obs3 = new Obstacles();
+let obs4 = new Obstacles();
 
 let food1 = new Food()
 let food2 = new Food()
@@ -121,6 +125,17 @@ function collision(head, array) {
         }
     }
     return false
+}
+
+function collisionObs(head, obs){
+    for(let i = 0; i < obs.x.length; i++){
+        for (let j = 0; j < obs.y.length; j++){
+            if (head.x == obs.x[i] && head.y == obs.y[i]) {
+                return true
+            } 
+        }
+    }
+    return false;
 }
 
 const isPrime = (num) => {
@@ -165,6 +180,23 @@ const drawHead = (direct) => {
         case "DOWN":
             ctx.drawImage(snakeGraphic, ...imagePos.faceBottom, 64, 64, snake[0].x, snake[0].y, box, box);break;
     }
+}
+
+function drawObstacles(x1,y1,x2,y2,objectX, objectY,made,obs){
+    ctx.fillStyle="brown";
+    for(let i = y1; i <= y2; i++){
+        for(let j = x1; j <= x2; j++){
+            ctx.fillRect(j*box,i*box,box,box);
+            if(made !== true){
+                objectX.push(j*box);
+                objectY.push(i*box);
+            }
+            else{
+                continue;
+            }
+        }
+    }
+    obs.isMade = true;
 }
 
 let stateD = "" // untuk menyimpan arah dari frame sebelumnya
@@ -243,6 +275,11 @@ function draw() {
 
     ctx.drawImage(duriImg, duri.x,duri.y,box,box)//draw duri
 
+    drawObstacles(5,4,13,4,obs1.x,obs1.y,obs1.isMade,obs1);
+    drawObstacles(5,15,13,15,obs2.x,obs2.y,obs2.isMade,obs2);
+    drawObstacles(4,7,4,10,obs3.x,obs3.y,obs3.isMade,obs3);
+    drawObstacles(14,9,14,11,obs4.x,obs4.y,obs4.isMade,obs4);
+
     // old head position
     let snakeX = snake[0].x
     let snakeY = snake[0].y
@@ -314,7 +351,7 @@ function draw() {
     }
 
     // game over
-    if (snakeX < 0 || snakeX == canvas.x || snakeY < 0 || snakeY == canvas.y || collision(newHead, snake)) {
+    if (snakeX < 0 || snakeX == cvs.width || snakeY < 0 || snakeY == cvs.height || collision(newHead, snake)|| collisionObs(newHead, obs1)||collisionObs(newHead, obs2)||collisionObs(newHead,obs3)||collisionObs(newHead,obs4)) {
         gameOver()
     }
 
