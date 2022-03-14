@@ -28,7 +28,7 @@ let score = 0
 // get 3 lives for the first time
 let lives = 3
 
-let level = 5
+let level = 1
 
 let heartTimerCount = {
     now: 0,
@@ -212,6 +212,18 @@ function draw() {
     obs1.y=[]
     obs1.isMade=false
 
+    obs2.x=[]
+    obs2.y=[]
+    obs2.isMade=false
+
+    obs3.x=[]
+    obs3.y=[]
+    obs3.isMade=false
+
+    obs4.x=[]
+    obs4.y=[]
+    obs4.isMade=false
+
     for (let i = 0; i < snake.length; i++) {
         if(snake[i+1] && snake[i-1]){
             // ketika objek memiliki 2 neighbor
@@ -372,18 +384,18 @@ function draw() {
         heart.y = random(box, canvas.y-(box+15))
         heartTimerCount.now = 0
     }
-    // //level
-    // if (score <= 5) {
-    //     level = 1
-    // } else if (score <= 10) {
-    //     level = 2
-    // } else if (score <= 15) {
-    //     level = 3
-    // }else if (score <= 20) {
-    //     level = 4
-    // } else if (score <= 25) {
-    //     level = 5
-    // }
+    //level
+    if (score <= 5) {
+        level = 1
+    } else if (score <= 10) {
+        level = 2
+    } else if (score <= 15) {
+        level = 3
+    }else if (score <= 20) {
+        level = 4
+    } else if (score <= 25) {
+        level = 5
+    }
 
     if (heartTimerCount.now < heartTimerCount.end) {
         ctx.drawImage(heartImg, heart.x, heart.y, box, box)//draw heart
@@ -417,7 +429,7 @@ function draw() {
     document.getElementById('level').innerText = level
 
 
-    console.log(obs1);
+    //console.log(obs1);
     // console.log(obs2);
     // console.log(obs3);
 
@@ -470,7 +482,7 @@ const pause = () => {
 }
 
 const resume = () => {
-    game = setInterval(draw, 100)
+    game = setInterval(draw, 200)
 }
 
 const gameOver = () => {
